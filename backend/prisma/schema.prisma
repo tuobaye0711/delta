@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model BulletType {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  level       Int
+  description String?
+  isHot       Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  priceHistory PriceHistory[]
+  transactions UserTransaction[]
+  targets      UserTarget[]
+
+  @@map("bullet_types")
+}
+
+model PriceHistory {
+  id        Int      @id @default(autoincrement())
+  bulletId  Int
+  price     Float
+  source    String
+  createdAt DateTime @default(now())
+
+  bullet BulletType @relation(fields: [bulletId], references: [id], onDelete: Cascade)
+
+  @@index([bulletId, createdAt])
+  @@map("price_history")
+}
+
+model UserTransaction {
+  id        Int      @id @default(autoincrement())
+  userId    String   @default("default")
+  bulletId  Int
+  action    String   // buy / sell
+  quantity  Int
+  price     Float
+  total     Float
+  note      String?
+  createdAt DateTime @default(now())
+
+  bullet BulletType @relation(fields: [bulletId], references: [id], onDelete: Cascade)
+
+  @@index([userId, bulletId])
+  @@map("user_transactions")
+}
+
+model UserTarget {
+  id          Int      @id @default(autoincrement())
+  userId      String   @default("default")
+  bulletId    Int
+  targetType  String   // profit / loss
+  targetPrice Float
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  bullet BulletType @relation(fields: [bulletId], references: [id], onDelete: Cascade)
+
+  @@index([userId, bulletId])
+  @@map("user_targets")
+}

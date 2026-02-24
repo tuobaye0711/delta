@@ -1,0 +1,43 @@
+{
+  "name": "delta-force-bullet-tracker-backend",
+  "version": "1.0.0",
+  "description": "三角洲子弹价格监控平台 - 后端服务",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:deploy": "prisma migrate deploy",
+    "postinstall": "npx prisma generate",
+    "scrape": "ts-node src/scraper/index.ts"
+  },
+  "keywords": [
+    "delta-force",
+    "bullet-tracker",
+    "price-monitor"
+  ],
+  "author": "盼盼",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "prisma": "^5.7.1",
+    "@prisma/client": "^5.7.1",
+    "pg": "^8.11.3",
+    "node-cron": "^3.0.3",
+    "axios": "^1.6.2",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "@types/node-cron": "^3.0.11",
+    "@types/node": "^20.10.6",
+    "typescript": "^5.3.3",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0"
+  }
+}
