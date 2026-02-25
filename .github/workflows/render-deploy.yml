@@ -1,0 +1,48 @@
+name: Deploy to Render
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Render
+        run: |
+          curl -X POST https://api.render.com/v1/services \
+            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "type": "web_service",
+              "name": "delta-force-api",
+              "ownerId": "tea-d6eoqin5r7bs73cgj04g",
+              "repo": "https://github.com/tuobaye0711/delta.git",
+              "branch": "main",
+              "rootDir": "backend",
+              "serviceDetails": {
+                "env": "node",
+                "buildCommand": "npm install && npm run build",
+                "startCommand": "npm start",
+                "envSpecificDetails": {
+                  "node": {
+                    "runtime": "20"
+                  }
+                }
+              },
+              "envVars": [
+                {
+                  "key": "DATABASE_URL",
+                  "value": "postgresql://delta_user:mpm13JCTEzQTc4ZoDiupsn2u529LH9zc@dpg-d6f6q77gi27c73co0ksg-a/delta_force"
+                },
+                {
+                  "key": "NODE_ENV",
+                  "value": "production"
+                },
+                {
+                  "key": "PORT",
+                  "value": "3000"
+                }
+              ]
+            }'
