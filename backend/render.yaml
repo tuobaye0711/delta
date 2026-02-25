@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: delta-force-api
+    env: node
+    region: oregon
+    plan: free
+    branch: main
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        value: postgresql://delta_user:mpm13JCTEzQTc4ZoDiupsn2u529LH9zc@dpg-d6f6q77gi27c73co0ksg-a/delta_force
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
